@@ -126,6 +126,8 @@ def add(path, name):
 def remove(path, name):
     ''' Remove a repository. '''
     os.chdir(path)
+    run_command('rm -fr %s' % name)
+    
     name = wrap_repo_name(name)
     run_command('rm -fr %s' % name)
 
