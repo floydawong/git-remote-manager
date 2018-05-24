@@ -32,13 +32,17 @@ def check_repo_validity(name):
     return REPO_POSTFIX in name
 
 
-def check_dir_validity(path, show_log=True):
-    grm_path = os.path.join(path, BASE_GRM_DIR)
-    if os.path.exists(grm_path):
-        return True
-    if show_log:
-        Logging.error("fatal: not a remote root directory(%s)" % BASE_GRM_DIR)
-    return False
+def check_path(func):
+    def wrapper(*args, **kwargs):
+        path = args[0]
+        grm_path = os.path.join(path, BASE_GRM_DIR)
+        if not os.path.exists(grm_path):
+            Logging.error(
+                "fatal: not a remote root directory(%s)" % BASE_GRM_DIR)
+            return
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 # ------------------ Split Line By Floyda ------------------
@@ -82,7 +86,8 @@ def set_config(path, key, value):
 # API
 # ------------------ Split Line By Floyda ------------------
 def init_root_repos(path):
-    if check_dir_validity(path, False):
+    grm_path = os.path.join(path, BASE_GRM_DIR)
+    if os.path.exists(grm_path):
         Logging.error('Reinitialized existing remote root directory in %s' %
                       os.path.abspath(path))
         return False
@@ -98,11 +103,10 @@ def init_root_repos(path):
     set_config('.', 'public_ip', get_public_ip())
 
 
+@check_path
 def add(path, name):
     ''' Create a repository. '''
-    if not check_dir_validity(path): return False
     os.chdir(path)
-
     name = wrap_repo_name(name)
     repo_name = os.path.join(path, name)
     if os.path.exists(repo_name):
@@ -118,19 +122,18 @@ def add(path, name):
     Logging.info("git remote:     git remote add origin %s" % (repo_url))
 
 
+@check_path
 def remove(path, name):
     ''' Remove a repository. '''
-    if not check_dir_validity(path): return False
     os.chdir(path)
     name = wrap_repo_name(name)
     run_command('rm -fr %s' % name)
 
 
+@check_path
 def list(path):
     ''' List existing repository. '''
-    if not check_dir_validity(path): return False
     os.chdir(path)
-
     for name in os.listdir(path):
         if check_repo_validity(name):
             repo_url = wrap_repo_url(path, name)
@@ -138,15 +141,15 @@ def list(path):
             Logging.info('%s  %80s' % (name, repo_url))
 
 
+@check_path
 def migrate(path, url):
     ''' Migrate the repositorys to other remote. '''
-    if not check_dir_validity(path): return False
     print('migrate')
 
 
+@check_path
 def config(path):
     ''' Edit the config.  '''
-    if not check_dir_validity(path): return False
     print('config')
 
 
@@ -160,5 +163,4 @@ def version():
 # Main
 # ------------------ Split Line By Floyda ------------------
 if __name__ == '__main__':
-    init_root_repos('./zzzz')
     pass
