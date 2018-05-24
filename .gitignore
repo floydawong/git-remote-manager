@@ -1,0 +1,6 @@
+*.json
+*.pyc
+*.egg-info
+.cache/
+build/
+dist/
