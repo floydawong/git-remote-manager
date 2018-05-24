@@ -2,7 +2,7 @@
 # Author: Floyda
 
 import os
-from utils import Logging, run_command, get_public_ip
+from utils import Logging, run_command, get_public_ip, open_file
 from macro import BASE_GRM_DIR, REPO_POSTFIX, CONFIG_FILE
 
 # ------------------ Split Line By Floyda ------------------
@@ -127,7 +127,7 @@ def remove(path, name):
     ''' Remove a repository. '''
     os.chdir(path)
     run_command('rm -fr %s' % name)
-    
+
     name = wrap_repo_name(name)
     run_command('rm -fr %s' % name)
 
@@ -152,7 +152,8 @@ def migrate(path, url):
 @check_path
 def config(path):
     ''' Edit the config.  '''
-    print('config')
+    fname = os.path.join(path, BASE_GRM_DIR, CONFIG_FILE)
+    open_file(os.path.abspath(fname))
 
 
 def version():

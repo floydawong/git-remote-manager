@@ -126,3 +126,25 @@ class timer():
         timestamp = time.time()
         self._func(*self._args, **self._kwargs)
         print(time.time() - timestamp)
+
+
+# ------------------ Split Line By Floyda ------------------
+# Open file in different platform
+# ------------------ Split Line By Floyda ------------------
+import sys
+
+
+def open_file(path):
+    p = sys.platform
+
+    command = '%s %s'
+    func = ''
+
+    if p == 'win32':
+        func = 'start'
+    elif p == 'darwin':
+        func = 'open'
+    else:
+        func = 'vi'
+
+    os.system(command % (func, path))
