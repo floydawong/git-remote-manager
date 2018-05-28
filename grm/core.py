@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Author: Floyda
 
+from multiprocessing import Process
 import os
 from utils import Logging, run_command, get_public_ip, open_file
 from macro import BASE_GRM_DIR, REPO_POSTFIX, CONFIG_FILE
@@ -85,6 +86,11 @@ def set_config(path, key, value):
 # ------------------ Split Line By Floyda ------------------
 # API
 # ------------------ Split Line By Floyda ------------------
+def init_public_ip():
+    set_config('.', 'public_ip', get_public_ip())
+    Logging.info('Initialized config : [public_ip]')
+
+
 def init_root_repos(path):
     grm_path = os.path.join(path, BASE_GRM_DIR)
     if os.path.exists(grm_path):
@@ -100,7 +106,8 @@ def init_root_repos(path):
     os.mkdir(BASE_GRM_DIR)
 
     init_config('.')
-    set_config('.', 'public_ip', get_public_ip())
+    p = Process(target=init_public_ip)
+    p.start()
 
 
 @check_path
