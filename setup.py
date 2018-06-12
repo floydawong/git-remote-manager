@@ -9,7 +9,7 @@ setup(
     author_email='floyda@163.com',
     license='MIT',
     description='Git Remote Manager',
-    long_description='Git Remote Manager',
+    long_description=open('readme.md').read(),
     keywords='git remote private server',
     url='https://github.com/FloydaGithub/git-remote-manager',
     packages=[
