@@ -1,6 +1,11 @@
 # Git Remote Manager
 > A Python library that manages the remote git repository
 
+## Install
+```
+pip install git-remote-manager
+```
+
 ## Usage
 
 ```
